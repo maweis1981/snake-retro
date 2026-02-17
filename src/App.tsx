@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { useGameState, useInput, useHighscores } from './hooks'
-import { Canvas, HUD, Overlay, PowerUpLegend } from './components'
+import { Canvas, HUD, Overlay, PowerUpLegend, TouchControls } from './components'
 import { audioSystem } from './game'
 import './styles/global.css'
 import styles from './App.module.css'
@@ -90,6 +90,7 @@ function App() {
           {isMuted ? '🔇 音乐关' : '🔊 音乐开'}
         </button>
       </aside>
+      <TouchControls onDirection={actions.setDirection} onPause={actions.togglePause} />
       <div className="crt-overlay" />
     </div>
   )

@@ -12,6 +12,7 @@ html, body {
   font-family: 'Press Start 2P', monospace;
   font-size: 14px;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 #root {
@@ -19,6 +20,19 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  html, body {
+    font-size: 12px;
+  }
+
+  #root {
+    align-items: flex-start;
+    padding-top: 0.5rem;
+    padding-bottom: 200px; /* 为触摸控制留空间 */
+  }
 }
 
 /* CRT 扫描线效果 */

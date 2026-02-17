@@ -12,6 +12,13 @@
 
 .canvasWrapper {
   position: relative;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+.canvasWrapper canvas {
+  max-width: 100%;
+  height: auto;
 }
 
 .sidebar {
@@ -35,4 +42,33 @@
 .muteButton:hover {
   border-color: #00ff41;
   color: #00ff41;
+}
+
+/* 移动端布局 */
+@media (max-width: 768px) {
+  .app {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    align-items: center;
+  }
+
+  .sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-width: auto;
+    width: 100%;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .sidebar > * {
+    flex: 1;
+    min-width: 150px;
+    max-width: 200px;
+  }
+
+  .muteButton {
+    padding: 0.5rem;
+  }
 }
