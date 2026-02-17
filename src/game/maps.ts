@@ -2,6 +2,7 @@
 
 import type { MapConfig, Position } from './types'
 import { GRID_WIDTH, GRID_HEIGHT } from './types'
+import { generateDailyWalls, getTodayString, getDailyDifficulty } from './daily'
 
 // 生成十字墙
 function generateCrossWalls(): Position[] {
@@ -133,5 +134,21 @@ export const MAPS: MapConfig[] = [
 ]
 
 export function getMapById(id: string): MapConfig {
+  if (id === 'daily') {
+    return getDailyMap()
+  }
   return MAPS.find(m => m.id === id) || MAPS[0]
+}
+
+// 获取每日挑战地图
+export function getDailyMap(): MapConfig {
+  const today = getTodayString()
+  const difficulty = getDailyDifficulty(today)
+  return {
+    id: 'daily',
+    name: `每日挑战 ${today}`,
+    description: `今日难度: ${difficulty}`,
+    difficulty: (difficulty.length as 1 | 2 | 3 | 4 | 5),
+    walls: generateDailyWalls(today),
+  }
 }

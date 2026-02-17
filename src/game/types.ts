@@ -7,7 +7,7 @@ export interface Position {
 
 export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
 
-export type GameMode = 'classic' | 'dark' | 'timed' | 'survival'
+export type GameMode = 'classic' | 'dark' | 'timed' | 'daily'
 
 export interface GameModeConfig {
   id: GameMode
@@ -89,5 +89,13 @@ export const GAME_MODES: GameModeConfig[] = [
   { id: 'classic', name: '经典', description: '传统贪吃蛇玩法', icon: '🎮' },
   { id: 'dark', name: '黑暗', description: '只能看到蛇头周围', icon: '🌑' },
   { id: 'timed', name: '限时', description: '60秒内尽可能得分', icon: '⏱️' },
-  { id: 'survival', name: '生存', description: '蛇会自动变长', icon: '💀' },
+  { id: 'daily', name: '每日', description: '每日挑战，全球同题', icon: '📅' },
 ]
+
+// 每日挑战记录
+export interface DailyChallengeRecord {
+  date: string
+  score: number
+  level: number
+  attempts: number
+}

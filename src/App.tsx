@@ -3,7 +3,8 @@
 import { useEffect, useState, useRef } from 'react'
 import { useGameState, useInput, useHighscores } from './hooks'
 import { Canvas, HUD, Overlay, PowerUpLegend, TouchControls } from './components'
-import { audioSystem } from './game'
+import { audioSystem, getDailyRecord, saveDailyRecord } from './game'
+import type { DailyChallengeRecord } from './game'
 import './styles/global.css'
 import styles from './App.module.css'
 
@@ -11,8 +12,14 @@ function App() {
   const { state, actions } = useGameState()
   const { highscores, addHighscore, isHighscore } = useHighscores()
   const [isMuted, setIsMuted] = useState(false)
+  const [dailyRecord, setDailyRecord] = useState<DailyChallengeRecord | null>(null)
   const prevLevelRef = useRef(state.level)
   const prevScoreRef = useRef(state.score)
+
+  // 加载每日挑战记录
+  useEffect(() => {
+    setDailyRecord(getDailyRecord())
+  }, [])
 
   useInput({
     onDirection: actions.setDirection,
@@ -29,32 +36,40 @@ function App() {
   useEffect(() => {
     if (state.status === 'playing') {
       audioSystem.start()
-    } else if (state.status === 'gameover') {
-      audioSystem.stop()
-      audioSystem.playSound('gameover')
-    } else if (state.status === 'paused' || state.status === 'menu') {
+    } else {
       audioSystem.stop()
     }
   }, [state.status])
 
-  // 音效：吃食物、升级
+  // 音效
   useEffect(() => {
-    if (state.status !== 'playing') return
-
     if (state.level > prevLevelRef.current) {
       audioSystem.playSound('levelup')
-    } else if (state.score > prevScoreRef.current) {
+    }
+    prevLevelRef.current = state.level
+  }, [state.level])
+
+  useEffect(() => {
+    if (state.score > prevScoreRef.current) {
       audioSystem.playSound('eat')
     }
-
-    prevLevelRef.current = state.level
     prevScoreRef.current = state.score
-  }, [state.score, state.level, state.status])
+  }, [state.score])
 
-  // 游戏结束时保存高分
+  useEffect(() => {
+    if (state.status === 'gameover') {
+      audioSystem.playSound('gameover')
+    }
+  }, [state.status])
+
+  // 游戏结束时保存分数
   useEffect(() => {
     if (state.status === 'gameover' && state.score > 0) {
-      if (isHighscore(state.score)) {
+      if (state.gameMode === 'daily') {
+        // 保存每日挑战记录
+        const record = saveDailyRecord(state.score, state.level)
+        setDailyRecord(record)
+      } else if (isHighscore(state.score)) {
         addHighscore({
           name: 'Player',
           score: state.score,
@@ -79,6 +94,7 @@ function App() {
           <Overlay
             state={state}
             highscores={highscores}
+            dailyRecord={dailyRecord}
             onStart={actions.startGame}
             onSelectMap={actions.selectMap}
             onSelectMode={actions.selectMode}

@@ -25,6 +25,9 @@ export function createInitialState(mapId: string = 'classic', gameMode: GameMode
   const startX = Math.floor(GRID_WIDTH / 2)
   const startY = Math.floor(GRID_HEIGHT / 2)
 
+  // 每日挑战模式使用特殊地图
+  const actualMapId = gameMode === 'daily' ? 'daily' : mapId
+
   const state: GameState = {
     snake: [
       { x: startX, y: startY },
@@ -42,7 +45,7 @@ export function createInitialState(mapId: string = 'classic', gameMode: GameMode
     combo: 0,
     lastFoodTime: 0,
     status: 'menu',
-    selectedMapId: mapId,
+    selectedMapId: actualMapId,
     gameMode: gameMode,
     tickInterval: BASE_TICK_MS,
     timeRemaining: gameMode === 'timed' ? TIMED_MODE_DURATION : undefined,
