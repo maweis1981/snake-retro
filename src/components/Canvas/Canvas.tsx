@@ -23,8 +23,6 @@ const COLORS = {
   snakeHead: '#00ff88',
   food: '#ff3a3a',
   wall: '#4a4a6a',
-  ghost: 'rgba(196, 77, 255, 0.3)',
-  fog: '#000000',
 }
 
 function drawPixelRect(
@@ -46,17 +44,7 @@ function drawPixelRect(
   }
 }
 
-// 计算两点之间的距离
-function getDistance(p1: Position, p2: Position): number {
-  return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2))
-}
-
-// 检查位置是否在可视范围内
-function isVisible(pos: Position, head: Position, radius: number): boolean {
-  return getDistance(pos, head) <= radius
-}
-
-// 绘制黑暗模式的迷雾
+// 绘制黑暗模式的迷雾遮罩
 function drawFogOfWar(ctx: CanvasRenderingContext2D, head: Position, radius: number) {
   const canvasWidth = GRID_WIDTH * CELL_SIZE
   const canvasHeight = GRID_HEIGHT * CELL_SIZE
@@ -64,29 +52,33 @@ function drawFogOfWar(ctx: CanvasRenderingContext2D, head: Position, radius: num
   const centerY = head.y * CELL_SIZE + CELL_SIZE / 2
   const pixelRadius = radius * CELL_SIZE
 
-  // 创建径向渐变遮罩
+  // 保存当前状态
+  ctx.save()
+
+  // 创建一个覆盖整个画布的路径，中间挖一个圆形
+  ctx.beginPath()
+  ctx.rect(0, 0, canvasWidth, canvasHeight)
+  ctx.arc(centerX, centerY, pixelRadius, 0, Math.PI * 2, true)
+  ctx.closePath()
+
+  // 填充黑色（圆形区域外）
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.95)'
+  ctx.fill()
+
+  // 绘制边缘渐变
   const gradient = ctx.createRadialGradient(
-    centerX, centerY, pixelRadius * 0.3,
+    centerX, centerY, pixelRadius * 0.6,
     centerX, centerY, pixelRadius
   )
   gradient.addColorStop(0, 'rgba(0, 0, 0, 0)')
-  gradient.addColorStop(0.7, 'rgba(0, 0, 0, 0.3)')
-  gradient.addColorStop(1, 'rgba(0, 0, 0, 0.95)')
+  gradient.addColorStop(1, 'rgba(0, 0, 0, 0.8)')
 
-  // 绘制四个角落的完全黑暗区域
-  ctx.fillStyle = COLORS.fog
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight)
-
-  // 用渐变"擦除"可视区域
-  ctx.globalCompositeOperation = 'destination-out'
   ctx.beginPath()
   ctx.arc(centerX, centerY, pixelRadius, 0, Math.PI * 2)
-  ctx.fill()
-  ctx.globalCompositeOperation = 'source-over'
-
-  // 添加边缘渐变效果
   ctx.fillStyle = gradient
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight)
+  ctx.fill()
+
+  ctx.restore()
 }
 
 export function Canvas({ state }: CanvasProps) {
@@ -108,7 +100,7 @@ export function Canvas({ state }: CanvasProps) {
     ctx.fillStyle = COLORS.background
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    // 绘制网格（黑暗模式下减淡）
+    // 绘制网格
     ctx.strokeStyle = isDarkMode ? '#0f0f1a' : COLORS.grid
     ctx.lineWidth = 0.5
     for (let x = 0; x <= GRID_WIDTH; x++) {
@@ -127,41 +119,19 @@ export function Canvas({ state }: CanvasProps) {
     // 绘制墙壁
     const map = getMapById(state.selectedMapId)
     map.walls.forEach(wall => {
-      if (!isDarkMode || isVisible(wall, head, DARK_MODE_VISION_RADIUS + 1)) {
-        drawPixelRect(ctx, wall.x, wall.y, CELL_SIZE, COLORS.wall)
-      }
+      drawPixelRect(ctx, wall.x, wall.y, CELL_SIZE, COLORS.wall)
     })
 
-    // 绘制道具（黑暗模式下远处的道具微弱发光）
+    // 绘制道具
     state.powerUps.forEach(powerUp => {
-      const distance = getDistance(powerUp.position, head)
-      const inRange = distance <= DARK_MODE_VISION_RADIUS
-
-      if (!isDarkMode || inRange) {
-        const alpha = 0.6 + 0.4 * Math.sin(Date.now() / 200)
-        ctx.globalAlpha = alpha
-        drawPixelRect(ctx, powerUp.position.x, powerUp.position.y, CELL_SIZE, powerUp.type.color, true)
-        ctx.globalAlpha = 1
-      } else if (isDarkMode && distance <= DARK_MODE_VISION_RADIUS + 3) {
-        // 远处道具微弱闪烁提示
-        const alpha = 0.1 + 0.1 * Math.sin(Date.now() / 300)
-        ctx.globalAlpha = alpha
-        drawPixelRect(ctx, powerUp.position.x, powerUp.position.y, CELL_SIZE, powerUp.type.color, true)
-        ctx.globalAlpha = 1
-      }
+      const alpha = 0.6 + 0.4 * Math.sin(Date.now() / 200)
+      ctx.globalAlpha = alpha
+      drawPixelRect(ctx, powerUp.position.x, powerUp.position.y, CELL_SIZE, powerUp.type.color, true)
+      ctx.globalAlpha = 1
     })
 
-    // 绘制食物（黑暗模式下远处微弱发光）
-    const foodDistance = getDistance(state.food, head)
-    if (!isDarkMode || foodDistance <= DARK_MODE_VISION_RADIUS) {
-      drawPixelRect(ctx, state.food.x, state.food.y, CELL_SIZE, COLORS.food, true)
-    } else if (isDarkMode && foodDistance <= DARK_MODE_VISION_RADIUS + 4) {
-      // 远处食物微弱发光提示
-      const alpha = 0.15 + 0.1 * Math.sin(Date.now() / 400)
-      ctx.globalAlpha = alpha
-      drawPixelRect(ctx, state.food.x, state.food.y, CELL_SIZE, COLORS.food, true)
-      ctx.globalAlpha = 1
-    }
+    // 绘制食物
+    drawPixelRect(ctx, state.food.x, state.food.y, CELL_SIZE, COLORS.food, true)
 
     // 绘制蛇
     const isGhost = hasEffect(state, 'ghost', now)
@@ -181,7 +151,7 @@ export function Canvas({ state }: CanvasProps) {
       }
     })
 
-    // 黑暗模式：绘制迷雾
+    // 黑暗模式：最后绘制迷雾遮罩
     if (isDarkMode && state.status === 'playing') {
       drawFogOfWar(ctx, head, DARK_MODE_VISION_RADIUS)
     }
