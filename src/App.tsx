@@ -81,6 +81,7 @@ function App() {
             highscores={highscores}
             onStart={actions.startGame}
             onSelectMap={actions.selectMap}
+            onSelectMode={actions.selectMode}
           />
         </div>
       </div>

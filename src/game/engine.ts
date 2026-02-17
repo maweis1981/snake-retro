@@ -5,6 +5,7 @@ import type {
   Position,
   Direction,
   PowerUp,
+  GameMode,
 } from './types'
 import {
   GRID_WIDTH,
@@ -14,12 +15,13 @@ import {
   POWERUP_LIFETIME_MS,
   MAX_POWERUPS,
   FOOD_PER_LEVEL,
+  TIMED_MODE_DURATION,
 } from './types'
 import { getMapById } from './maps'
 import { getRandomPowerUpType } from './powerups'
 
 // 创建初始游戏状态
-export function createInitialState(mapId: string = 'classic'): GameState {
+export function createInitialState(mapId: string = 'classic', gameMode: GameMode = 'classic'): GameState {
   const startX = Math.floor(GRID_WIDTH / 2)
   const startY = Math.floor(GRID_HEIGHT / 2)
 
@@ -41,7 +43,9 @@ export function createInitialState(mapId: string = 'classic'): GameState {
     lastFoodTime: 0,
     status: 'menu',
     selectedMapId: mapId,
+    gameMode: gameMode,
     tickInterval: BASE_TICK_MS,
+    timeRemaining: gameMode === 'timed' ? TIMED_MODE_DURATION : undefined,
   }
 
   state.food = spawnFood(state)
@@ -337,8 +341,13 @@ export function tick(state: GameState, now: number): GameState {
 
 // 开始游戏
 export function startGame(state: GameState): GameState {
-  const newState = createInitialState(state.selectedMapId)
+  const newState = createInitialState(state.selectedMapId, state.gameMode)
   return { ...newState, status: 'playing' }
+}
+
+// 选择游戏模式
+export function selectGameMode(state: GameState, mode: GameMode): GameState {
+  return { ...state, gameMode: mode }
 }
 
 // 暂停/继续

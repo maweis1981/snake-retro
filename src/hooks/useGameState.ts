@@ -1,7 +1,7 @@
 // 游戏状态管理 Hook
 
 import { useReducer, useCallback, useEffect, useRef } from 'react'
-import type { GameState, Direction } from '../game'
+import type { GameState, Direction, GameMode } from '../game'
 import {
   createInitialState,
   tick as gameTick,
@@ -9,6 +9,7 @@ import {
   startGame,
   togglePause,
   selectMap,
+  selectGameMode,
 } from '../game'
 
 type GameAction =
@@ -17,6 +18,7 @@ type GameAction =
   | { type: 'START_GAME' }
   | { type: 'TOGGLE_PAUSE' }
   | { type: 'SELECT_MAP'; mapId: string }
+  | { type: 'SELECT_MODE'; mode: GameMode }
   | { type: 'RESET' }
 
 function gameReducer(state: GameState, action: GameAction): GameState {
@@ -31,15 +33,21 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       return togglePause(state)
     case 'SELECT_MAP':
       return selectMap(state, action.mapId)
+    case 'SELECT_MODE':
+      return selectGameMode(state, action.mode)
     case 'RESET':
-      return createInitialState(state.selectedMapId)
+      return createInitialState(state.selectedMapId, state.gameMode)
     default:
       return state
   }
 }
 
 export function useGameState() {
-  const [state, dispatch] = useReducer(gameReducer, 'classic', createInitialState)
+  const [state, dispatch] = useReducer(
+    gameReducer,
+    { mapId: 'classic', mode: 'classic' as GameMode },
+    (init) => createInitialState(init.mapId, init.mode)
+  )
   const lastTickRef = useRef<number>(0)
   const animationFrameRef = useRef<number>(0)
 
@@ -69,6 +77,7 @@ export function useGameState() {
     startGame: () => dispatch({ type: 'START_GAME' }),
     togglePause: () => dispatch({ type: 'TOGGLE_PAUSE' }),
     selectMap: (mapId: string) => dispatch({ type: 'SELECT_MAP', mapId }),
+    selectMode: (mode: GameMode) => dispatch({ type: 'SELECT_MODE', mode }),
     reset: () => dispatch({ type: 'RESET' }),
   }
 

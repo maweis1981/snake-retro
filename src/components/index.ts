@@ -1,6 +1,7 @@
 export { Canvas } from './Canvas'
 export { HUD } from './HUD'
 export { MapSelector } from './MapSelector'
+export { ModeSelector } from './ModeSelector'
 export { Overlay } from './Overlay'
 export { PowerUpLegend } from './PowerUpLegend'
 export { TouchControls } from './TouchControls'
