@@ -81,7 +81,7 @@ export const COMBO_WINDOW_MS = 2000
 export const POWERUP_LIFETIME_MS = 12000
 export const MAX_POWERUPS = 3
 export const FOOD_PER_LEVEL = 5
-export const DARK_MODE_VISION_RADIUS = 4  // 黑暗模式可视范围
+export const DARK_MODE_VISION_RADIUS = 6  // 黑暗模式可视范围（增大）
 export const TIMED_MODE_DURATION = 60000  // 限时模式60秒
 
 // 游戏模式配置

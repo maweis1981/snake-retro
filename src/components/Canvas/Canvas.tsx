@@ -52,7 +52,6 @@ function drawFogOfWar(ctx: CanvasRenderingContext2D, head: Position, radius: num
   const centerY = head.y * CELL_SIZE + CELL_SIZE / 2
   const pixelRadius = radius * CELL_SIZE
 
-  // 保存当前状态
   ctx.save()
 
   // 创建一个覆盖整个画布的路径，中间挖一个圆形
@@ -61,17 +60,17 @@ function drawFogOfWar(ctx: CanvasRenderingContext2D, head: Position, radius: num
   ctx.arc(centerX, centerY, pixelRadius, 0, Math.PI * 2, true)
   ctx.closePath()
 
-  // 填充黑色（圆形区域外）
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.95)'
+  // 填充半透明黑色（圆形区域外）- 降低不透明度让边缘更可见
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.85)'
   ctx.fill()
 
-  // 绘制边缘渐变
+  // 绘制更柔和的边缘渐变
   const gradient = ctx.createRadialGradient(
-    centerX, centerY, pixelRadius * 0.6,
+    centerX, centerY, pixelRadius * 0.7,
     centerX, centerY, pixelRadius
   )
   gradient.addColorStop(0, 'rgba(0, 0, 0, 0)')
-  gradient.addColorStop(1, 'rgba(0, 0, 0, 0.8)')
+  gradient.addColorStop(1, 'rgba(0, 0, 0, 0.5)')
 
   ctx.beginPath()
   ctx.arc(centerX, centerY, pixelRadius, 0, Math.PI * 2)
