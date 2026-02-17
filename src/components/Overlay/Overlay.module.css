@@ -1,0 +1,122 @@
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(10, 10, 18, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 400px;
+}
+
+.title {
+  font-size: 2rem;
+  color: #00ff41;
+  text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+  margin: 0;
+  animation: glow 2s ease-in-out infinite;
+}
+
+.pauseTitle {
+  font-size: 1.5rem;
+  color: #ffe135;
+  margin: 0;
+}
+
+.gameoverTitle {
+  font-size: 1.5rem;
+  color: #ff3a3a;
+  margin: 0;
+}
+
+.startButton {
+  background: transparent;
+  border: 2px solid #00ff41;
+  color: #00ff41;
+  padding: 0.75rem 2rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.startButton:hover {
+  background: rgba(0, 255, 65, 0.2);
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+}
+
+.controls {
+  font-size: 0.6rem;
+  color: #888;
+  text-align: center;
+}
+
+.controls p {
+  margin: 0.25rem 0;
+}
+
+.hint {
+  font-size: 0.7rem;
+  color: #888;
+}
+
+.finalScore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.scoreValue {
+  font-size: 2rem;
+  color: #00ff41;
+  text-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+}
+
+.finalLevel {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.highscores {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.highscores h3 {
+  font-size: 0.7rem;
+  color: #888;
+  margin: 0 0 0.5rem 0;
+}
+
+.highscores ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.6rem;
+  color: #666;
+}
+
+.highscores li {
+  margin: 0.25rem 0;
+}
+
+@keyframes glow {
+  0%, 100% { text-shadow: 0 0 20px rgba(0, 255, 65, 0.5); }
+  50% { text-shadow: 0 0 30px rgba(0, 255, 65, 0.8); }
+}

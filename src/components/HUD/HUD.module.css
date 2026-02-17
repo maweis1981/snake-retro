@@ -1,0 +1,65 @@
+.hud {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem;
+  background: rgba(10, 10, 18, 0.9);
+  border: 1px solid #00ff41;
+  font-family: 'Press Start 2P', monospace;
+  align-items: center;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.6rem;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.value {
+  font-size: 1.2rem;
+  color: #00ff41;
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+
+.combo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: pulse 0.5s ease-in-out infinite;
+}
+
+.comboValue {
+  font-size: 1.5rem;
+  color: #ff3a3a;
+  text-shadow: 0 0 10px rgba(255, 58, 58, 0.5);
+}
+
+.comboLabel {
+  font-size: 0.5rem;
+  color: #ff3a3a;
+}
+
+.effects {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.effect {
+  padding: 0.25rem 0.5rem;
+  background: rgba(196, 77, 255, 0.2);
+  border: 1px solid #c44dff;
+  font-size: 0.6rem;
+  color: #c44dff;
+  text-transform: uppercase;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}

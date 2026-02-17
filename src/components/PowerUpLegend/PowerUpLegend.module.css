@@ -1,0 +1,45 @@
+.legend {
+  padding: 1rem;
+  background: rgba(10, 10, 18, 0.9);
+  border: 1px solid #333;
+}
+
+.title {
+  font-size: 0.7rem;
+  color: #888;
+  margin: 0 0 0.75rem 0;
+  text-transform: uppercase;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.color {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 0.6rem;
+  color: #fff;
+}
+
+.desc {
+  font-size: 0.5rem;
+  color: #666;
+}

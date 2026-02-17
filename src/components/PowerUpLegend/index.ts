@@ -1,0 +1,1 @@
+export { PowerUpLegend } from './PowerUpLegend'
