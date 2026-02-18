@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="release_notes">
+Version 1.0.0
+
+What\'s New:
+• Four game modes: Classic, Dark, Timed, Daily Challenge
+• Four unique maps with different difficulties
+• Six power-up types: Speed, Slow, Ghost, Bomb, Shrink, Double
+• Pixel retro graphics with CRT scanline effects
+• 8-bit background music and sound effects
+• Full-screen support for notch and Dynamic Island
+• Local leaderboard system
+• Virtual button controls optimized for mobile
+
+Enjoy the classic snake game with a modern twist!
+    </string>
+</resources>

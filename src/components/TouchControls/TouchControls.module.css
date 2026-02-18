@@ -5,26 +5,27 @@
   right: 0;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  padding: 1rem;
-  pointer-events: none;
+  align-items: center;
+  padding: 16px 24px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 16px);
+  background: linear-gradient(transparent, rgba(10, 10, 18, 0.9));
   z-index: 100;
 }
 
-.dpad {
-  display: grid;
-  grid-template-columns: repeat(3, 60px);
-  grid-template-rows: repeat(3, 60px);
-  gap: 4px;
-  pointer-events: auto;
+.leftPad,
+.rightPad {
+  display: flex;
+  gap: 12px;
 }
 
-.btn {
-  background: rgba(0, 255, 65, 0.2);
-  border: 2px solid rgba(0, 255, 65, 0.5);
+.dirBtn {
+  width: 64px;
+  height: 64px;
+  background: rgba(0, 255, 65, 0.15);
+  border: 2px solid rgba(0, 255, 65, 0.4);
   color: #00ff41;
   font-size: 1.5rem;
-  border-radius: 8px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,70 +34,48 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.btn:active {
-  background: rgba(0, 255, 65, 0.4);
+.dirBtn:active {
+  background: rgba(0, 255, 65, 0.35);
   border-color: #00ff41;
-}
-
-.up {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.left {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-.right {
-  grid-column: 3;
-  grid-row: 2;
-}
-
-.down {
-  grid-column: 2;
-  grid-row: 3;
+  transform: scale(0.95);
 }
 
 .pauseBtn {
-  width: 60px;
-  height: 60px;
-  background: rgba(255, 225, 53, 0.2);
-  border: 2px solid rgba(255, 225, 53, 0.5);
+  width: 52px;
+  height: 52px;
+  background: rgba(255, 225, 53, 0.15);
+  border: 2px solid rgba(255, 225, 53, 0.4);
   color: #ffe135;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: auto;
   touch-action: manipulation;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
 .pauseBtn:active {
-  background: rgba(255, 225, 53, 0.4);
+  background: rgba(255, 225, 53, 0.35);
   border-color: #ffe135;
 }
 
-/* 横屏时调整位置 */
 @media (orientation: landscape) and (max-height: 500px) {
   .container {
-    padding: 0.5rem;
+    padding: 8px 16px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 8px) + 8px);
   }
 
-  .dpad {
-    grid-template-columns: repeat(3, 50px);
-    grid-template-rows: repeat(3, 50px);
-  }
-
-  .btn, .pauseBtn {
+  .dirBtn {
+    width: 52px;
+    height: 52px;
     font-size: 1.2rem;
   }
 
   .pauseBtn {
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
   }
 }

@@ -11,27 +11,25 @@ html, body {
   color: #fff;
   font-family: 'Press Start 2P', monospace;
   font-size: 14px;
-  min-height: 100vh;
-  overflow-x: hidden;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 #root {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
-/* 移动端适配 */
-@media (max-width: 768px) {
-  html, body {
-    font-size: 12px;
-  }
-
-  #root {
-    align-items: flex-start;
-    padding-top: 0.5rem;
-    padding-bottom: 200px; /* 为触摸控制留空间 */
+/* 支持安全区域 */
+@supports (padding-top: env(safe-area-inset-top)) {
+  html {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   }
 }
 
@@ -53,7 +51,6 @@ html, body {
   z-index: 1000;
 }
 
-/* 全局 glow 效果 */
 .glow-green {
   text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
 }

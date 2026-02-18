@@ -1,6 +1,6 @@
-// 移动端触摸控制组件
+// 移动端触摸控制 - 底部虚拟按键
 
-import { useEffect, useRef, useCallback, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import type { Direction } from '../../game'
 import styles from './TouchControls.module.css'
 
@@ -10,10 +10,8 @@ interface TouchControlsProps {
 }
 
 export function TouchControls({ onDirection, onPause }: TouchControlsProps) {
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null)
   const [isMobile, setIsMobile] = useState(false)
 
-  // 检测是否为移动设备
   useEffect(() => {
     const checkMobile = () => {
       const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0
@@ -25,82 +23,55 @@ export function TouchControls({ onDirection, onPause }: TouchControlsProps) {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  // 滑动手势检测
-  const handleTouchStart = useCallback((e: TouchEvent) => {
-    const touch = e.touches[0]
-    touchStartRef.current = { x: touch.clientX, y: touch.clientY }
-  }, [])
-
-  const handleTouchEnd = useCallback((e: TouchEvent) => {
-    if (!touchStartRef.current) return
-
-    const touch = e.changedTouches[0]
-    const deltaX = touch.clientX - touchStartRef.current.x
-    const deltaY = touch.clientY - touchStartRef.current.y
-    const minSwipeDistance = 30
-
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      if (Math.abs(deltaX) > minSwipeDistance) {
-        onDirection(deltaX > 0 ? 'RIGHT' : 'LEFT')
-      }
-    } else {
-      if (Math.abs(deltaY) > minSwipeDistance) {
-        onDirection(deltaY > 0 ? 'DOWN' : 'UP')
-      }
-    }
-
-    touchStartRef.current = null
+  const handleDirection = useCallback((dir: Direction) => (e: React.TouchEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onDirection(dir)
   }, [onDirection])
-
-  useEffect(() => {
-    if (isMobile) {
-      document.addEventListener('touchstart', handleTouchStart, { passive: true })
-      document.addEventListener('touchend', handleTouchEnd, { passive: true })
-
-      return () => {
-        document.removeEventListener('touchstart', handleTouchStart)
-        document.removeEventListener('touchend', handleTouchEnd)
-      }
-    }
-  }, [isMobile, handleTouchStart, handleTouchEnd])
 
   if (!isMobile) return null
 
   return (
     <div className={styles.container}>
-      <div className={styles.dpad}>
+      {/* 左侧：上下按钮 */}
+      <div className={styles.leftPad}>
         <button
-          className={`${styles.btn} ${styles.up}`}
-          onTouchStart={(e) => { e.preventDefault(); onDirection('UP') }}
+          className={styles.dirBtn}
+          onTouchStart={handleDirection('UP')}
         >
           ▲
         </button>
         <button
-          className={`${styles.btn} ${styles.left}`}
-          onTouchStart={(e) => { e.preventDefault(); onDirection('LEFT') }}
-        >
-          ◀
-        </button>
-        <button
-          className={`${styles.btn} ${styles.right}`}
-          onTouchStart={(e) => { e.preventDefault(); onDirection('RIGHT') }}
-        >
-          ▶
-        </button>
-        <button
-          className={`${styles.btn} ${styles.down}`}
-          onTouchStart={(e) => { e.preventDefault(); onDirection('DOWN') }}
+          className={styles.dirBtn}
+          onTouchStart={handleDirection('DOWN')}
         >
           ▼
         </button>
       </div>
 
+      {/* 中间：暂停按钮 */}
       <button
         className={styles.pauseBtn}
-        onTouchStart={(e) => { e.preventDefault(); onPause() }}
+        onTouchStart={(e) => { e.preventDefault(); e.stopPropagation(); onPause() }}
       >
         ⏸
       </button>
+
+      {/* 右侧：左右按钮 */}
+      <div className={styles.rightPad}>
+        <button
+          className={styles.dirBtn}
+          onTouchStart={handleDirection('LEFT')}
+        >
+          ◀
+        </button>
+        <button
+          className={styles.dirBtn}
+          onTouchStart={handleDirection('RIGHT')}
+        >
+          ▶
+        </button>
+      </div>
     </div>
   )
 }
